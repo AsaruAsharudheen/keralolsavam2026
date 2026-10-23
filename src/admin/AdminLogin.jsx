@@ -81,9 +81,6 @@ export default function AdminLogin({ onLoginSuccess }) {
           </button>
         </form>
 
-        <div style={{ marginTop: 22, textAlign: 'center', fontSize: 12, color: '#64748b' }}>
-          Default access: <code>admin</code> / <code>admin123</code>
-        </div>
       </div>
     </div>
   );
