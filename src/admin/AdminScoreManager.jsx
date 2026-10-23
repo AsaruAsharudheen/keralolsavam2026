@@ -75,6 +75,41 @@ export default function AdminScoreManager({ token }) {
   const handleStatusSelectChange = async (newStatus) => {
     setMatchStatus(newStatus);
     if (!selectedMatch) return;
+
+    // Client-side validation: If trying to complete a tied match without a toss or penalty winner
+    if (newStatus === 'Completed') {
+      const hScore = parseInt(homeScore) || 0;
+      const aScore = parseInt(awayScore) || 0;
+      if (hScore === aScore) {
+        if (selectedMatch.match_number <= 22) {
+          if (!tossWinnerId) {
+            setMsg({
+              type: 'error',
+              text: 'This Round 1 match is tied. Please select the Coin Toss Winner below before marking as Completed.'
+            });
+            return;
+          }
+        } else {
+          // Round 2+
+          const hPK = homePK !== '' ? parseInt(homePK) : null;
+          const aPK = awayPK !== '' ? parseInt(awayPK) : null;
+          if (hPK === null || aPK === null) {
+            setMsg({
+              type: 'error',
+              text: 'This match is tied. Please enter the penalty shootout score below before marking as Completed.'
+            });
+            return;
+          } else if (hPK === aPK && !tossWinnerId) {
+            setMsg({
+              type: 'error',
+              text: 'Penalties are also tied. Please select the Coin Toss Winner below before marking as Completed.'
+            });
+            return;
+          }
+        }
+      }
+    }
+
     setSaving(true);
     setMsg(null);
     try {
