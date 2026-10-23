@@ -233,24 +233,22 @@ export default function AdminScoreManager({ token }) {
             </div>
           </div>
 
-          {/* 1. MATCH STATUS SELECT DROPDOWN MODEL (Pending, Running, Halftime, Finished) */}
+          {/* 1. MATCH STATUS SELECT DROPDOWN MODEL */}
           <div className="form-group" style={{ marginBottom: 20 }}>
             <label className="form-label" style={{ fontSize: 13, color: '#0f172a' }}>Match Status (Select Option)</label>
             <select 
               className="form-select"
-              value={matchStatus === 'Half-time' ? 'Halftime' : matchStatus}
+              value={matchStatus === 'Half-time' ? 'Halftime' : (matchStatus === 'Finished' ? 'Completed' : matchStatus)}
               onChange={(e) => handleStatusSelectChange(e.target.value)}
               style={{ fontSize: 15, fontWeight: 800, padding: '12px 14px', background: '#f8fafc', borderColor: '#cbd5e1' }}
             >
               <option value="Pending">Pending</option>
               <option value="Running">Running (Live)</option>
               <option value="Halftime">Halftime</option>
-              <option value="Half-time">Half-time</option>
               <option value="Completed">Completed</option>
-              <option value="Finished">Finished</option>
             </select>
             <div style={{ fontSize: 12, color: '#64748b', marginTop: 4 }}>
-              * When set to <strong>Completed</strong> or <strong>Finished</strong>, the match status and winner update directly in the database, automatically advancing the winner to the next round.
+              * When set to <strong>Completed</strong>, the match status and winner update directly in the database, automatically advancing the winner to the next round.
             </div>
           </div>
 
