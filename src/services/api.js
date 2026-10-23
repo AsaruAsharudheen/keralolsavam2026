@@ -81,14 +81,14 @@ export const api = {
     return res.json();
   },
 
-  updateMatchStatus: async (matchId, status, summary = null, token) => {
+  updateMatchStatus: async (matchId, status, summary = null, token, tossWinnerTeamId = null) => {
     const res = await fetch(`${API_BASE}/fixtures.php?action=update_status`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`
       },
-      body: JSON.stringify({ id: matchId, status, summary })
+      body: JSON.stringify({ id: matchId, status, summary, toss_winner_team_id: tossWinnerTeamId })
     });
     return res.json();
   },

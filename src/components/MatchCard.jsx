@@ -114,8 +114,20 @@ export default function MatchCard({ match, onClick }) {
         </div>
       </div>
 
-      {/* Extra Time / Penalties Callout */}
-      {match.is_penalties == 1 && (
+      {/* Tie-breaker Decider Callouts (Penalties or Toss) */}
+      {isCompleted && match.win_method === 'TOSS' && (
+        <div style={{ padding: '4px 12px', background: '#fff7ed', fontSize: 11, fontWeight: 800, color: '#c2410c', borderTop: '1px solid #fdba74', textAlign: 'center' }}>
+          🪙 Winner decided via Coin Toss (Draw {match.home_score} - {match.away_score})
+        </div>
+      )}
+
+      {isCompleted && match.win_method === 'PENALTIES' && (
+        <div style={{ padding: '4px 12px', background: '#fffbeb', fontSize: 11, fontWeight: 800, color: '#b45309', borderTop: '1px solid #fde68a', textAlign: 'center' }}>
+          ⚽ Won on Penalties: {match.home_penalty_score} - {match.away_penalty_score}
+        </div>
+      )}
+
+      {!isCompleted && match.is_penalties == 1 && match.home_penalty_score !== null && (
         <div style={{ padding: '4px 12px', background: '#fffbeb', fontSize: 11, fontWeight: 800, color: '#b45309', borderTop: '1px solid #fde68a', textAlign: 'center' }}>
           Penalty Shootout: {match.home_penalty_score} - {match.away_penalty_score}
         </div>

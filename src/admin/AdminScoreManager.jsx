@@ -19,6 +19,9 @@ export default function AdminScoreManager({ token }) {
   const [awayPK, setAwayPK] = useState('');
   const [isPenalties, setIsPenalties] = useState(false);
 
+  // Toss Winner (Round 1 draw, or Round 2+ if penalties also draw)
+  const [tossWinnerId, setTossWinnerId] = useState('');
+
   // Goal recording state: ONLY Team and Scorer Name (minute, eventtype, note removed)
   const [eventTeamId, setEventTeamId] = useState('');
   const [eventPlayerName, setEventPlayerName] = useState('');
@@ -56,6 +59,7 @@ export default function AdminScoreManager({ token }) {
         setHomePK(m.home_penalty_score !== null ? m.home_penalty_score : '');
         setAwayPK(m.away_penalty_score !== null ? m.away_penalty_score : '');
         setIsPenalties(m.is_penalties == 1);
+        setTossWinnerId(m.toss_winner_team_id ? String(m.toss_winner_team_id) : (m.winner_team_id ? String(m.winner_team_id) : ''));
         if (m.home_team_id) setEventTeamId(m.home_team_id);
       }
     } catch (e) {
@@ -67,14 +71,15 @@ export default function AdminScoreManager({ token }) {
     loadMatches();
   }, []);
 
-  // Update Status Dropdown Change (Pending, Running, Halftime, Finished)
+  // Update Status Dropdown Change (Pending, Running, Halftime, Completed)
   const handleStatusSelectChange = async (newStatus) => {
     setMatchStatus(newStatus);
     if (!selectedMatch) return;
     setSaving(true);
     setMsg(null);
     try {
-      const res = await api.updateMatchStatus(selectedMatch.id, newStatus, 'Status changed in admin', token);
+      const tossParam = tossWinnerId ? parseInt(tossWinnerId) : null;
+      const res = await api.updateMatchStatus(selectedMatch.id, newStatus, 'Status changed in admin', token, tossParam);
       if (res.success) {
         setMsg({ 
           type: 'success', 
@@ -106,7 +111,8 @@ export default function AdminScoreManager({ token }) {
         away_halftime_score: null,
         home_penalty_score: homePK !== '' ? parseInt(homePK) : null,
         away_penalty_score: awayPK !== '' ? parseInt(awayPK) : null,
-        is_penalties: isPenalties ? 1 : 0
+        is_penalties: isPenalties ? 1 : 0,
+        toss_winner_team_id: tossWinnerId ? parseInt(tossWinnerId) : null
       }, token);
 
       if (res.success) {
@@ -285,28 +291,76 @@ export default function AdminScoreManager({ token }) {
               </div>
             </div>
 
-            {/* Penalty Shootout (If Draw) */}
-            <div style={{ marginTop: 16, paddingTop: 14, borderTop: '1px solid #e2e8f0' }}>
-              <label className="form-label">Penalty Shootout (Only in Case of Draw)</label>
-              <div className="admin-penalties-grid">
-                <input 
-                  type="number" 
-                  placeholder="Home Penalties" 
-                  value={homePK} 
-                  onChange={(e) => { setHomePK(e.target.value); setIsPenalties(true); }} 
-                  className="form-input" 
-                  style={{ padding: '10px' }} 
-                />
-                <input 
-                  type="number" 
-                  placeholder="Away Penalties" 
-                  value={awayPK} 
-                  onChange={(e) => { setAwayPK(e.target.value); setIsPenalties(true); }} 
-                  className="form-input" 
-                  style={{ padding: '10px' }} 
-                />
+            {/* ROUND 1 TIE-BREAKER (DRAW -> TOSS ONLY) */}
+            {selectedMatch && selectedMatch.match_number <= 22 && parseInt(homeScore) === parseInt(awayScore) && (
+              <div style={{ marginTop: 16, paddingTop: 14, borderTop: '1px solid #fed7aa', background: '#fff7ed', padding: '14px', borderRadius: 10 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6, color: '#c2410c', fontWeight: 900, fontSize: 13, marginBottom: 6 }}>
+                  <span>🪙 Round 1 Rule: Match Draw ({homeScore}-{awayScore}) ➔ Toss Winner Only</span>
+                </div>
+                <p style={{ fontSize: 12, color: '#9a3412', marginBottom: 10 }}>
+                  In Round 1 preliminary matches, there are no penalty shootouts. Select which team won the coin toss:
+                </p>
+                <select 
+                  className="form-select"
+                  value={tossWinnerId}
+                  onChange={(e) => setTossWinnerId(e.target.value)}
+                  style={{ background: '#ffffff', borderColor: '#fb923c', fontWeight: 800, color: '#7c2d12' }}
+                >
+                  <option value="">-- Select Coin Toss Winner --</option>
+                  {selectedMatch.home_team_id && <option value={selectedMatch.home_team_id}>{selectedMatch.home_team_name} (Toss Winner)</option>}
+                  {selectedMatch.away_team_id && <option value={selectedMatch.away_team_id}>{selectedMatch.away_team_name} (Toss Winner)</option>}
+                </select>
               </div>
-            </div>
+            )}
+
+            {/* ROUND 2 ONWARDS TIE-BREAKER (DRAW -> PENALTIES, THEN IF DRAW -> TOSS) */}
+            {selectedMatch && selectedMatch.match_number > 22 && (
+              <div style={{ marginTop: 16, paddingTop: 14, borderTop: '1px solid #e2e8f0' }}>
+                <label className="form-label" style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                  <span>⚽ Penalty Shootout (Round 2+ If Draw)</span>
+                </label>
+                <div className="admin-penalties-grid">
+                  <input 
+                    type="number" 
+                    placeholder="Home Penalties" 
+                    value={homePK} 
+                    onChange={(e) => { setHomePK(e.target.value); setIsPenalties(true); }} 
+                    className="form-input" 
+                    style={{ padding: '10px' }} 
+                  />
+                  <input 
+                    type="number" 
+                    placeholder="Away Penalties" 
+                    value={awayPK} 
+                    onChange={(e) => { setAwayPK(e.target.value); setIsPenalties(true); }} 
+                    className="form-input" 
+                    style={{ padding: '10px' }} 
+                  />
+                </div>
+
+                {/* If Penalties are also Tied in Round 2+ -> Toss Decides */}
+                {parseInt(homeScore) === parseInt(awayScore) && homePK !== '' && awayPK !== '' && parseInt(homePK) === parseInt(awayPK) && (
+                  <div style={{ marginTop: 12, background: '#fff7ed', border: '1px solid #fdba74', padding: '12px', borderRadius: 10 }}>
+                    <div style={{ color: '#c2410c', fontWeight: 900, fontSize: 13, marginBottom: 4 }}>
+                      🪙 Penalties Tied ({homePK}-{awayPK}) ➔ Coin Toss Decider
+                    </div>
+                    <p style={{ fontSize: 12, color: '#9a3412', marginBottom: 8 }}>
+                      Penalties ended in a tie. Select which team won the coin toss:
+                    </p>
+                    <select 
+                      className="form-select"
+                      value={tossWinnerId}
+                      onChange={(e) => setTossWinnerId(e.target.value)}
+                      style={{ background: '#ffffff', borderColor: '#fb923c', fontWeight: 800, color: '#7c2d12' }}
+                    >
+                      <option value="">-- Select Coin Toss Winner --</option>
+                      {selectedMatch.home_team_id && <option value={selectedMatch.home_team_id}>{selectedMatch.home_team_name} (Toss Winner)</option>}
+                      {selectedMatch.away_team_id && <option value={selectedMatch.away_team_id}>{selectedMatch.away_team_name} (Toss Winner)</option>}
+                    </select>
+                  </div>
+                )}
+              </div>
+            )}
 
             <button onClick={handleSaveScore} disabled={saving} className="btn btn-primary" style={{ width: '100%', marginTop: 16 }}>
               Save Score Changes
