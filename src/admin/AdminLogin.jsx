@@ -4,7 +4,7 @@ import { Lock } from 'lucide-react';
 
 export default function AdminLogin({ onLoginSuccess }) {
   const [username, setUsername] = useState('admin');
-  const [password, setPassword] = useState('admin123');
+  const [password, setPassword] = useState('admin#@nl2026');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
