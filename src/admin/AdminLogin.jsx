@@ -3,8 +3,8 @@ import { api } from '../services/api';
 import { Lock } from 'lucide-react';
 
 export default function AdminLogin({ onLoginSuccess }) {
-  const [username, setUsername] = useState('admin');
-  const [password, setPassword] = useState('admin#@nl2026');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -46,7 +46,7 @@ export default function AdminLogin({ onLoginSuccess }) {
           </div>
         )}
 
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} autoComplete="off">
           <div className="form-group">
             <label className="form-label">Username</label>
             <input 
@@ -54,7 +54,8 @@ export default function AdminLogin({ onLoginSuccess }) {
               className="form-input" 
               value={username} 
               onChange={(e) => setUsername(e.target.value)} 
-              placeholder="Username" 
+              placeholder="Enter your username" 
+              autoComplete="off"
               required 
             />
           </div>
@@ -66,7 +67,8 @@ export default function AdminLogin({ onLoginSuccess }) {
               className="form-input" 
               value={password} 
               onChange={(e) => setPassword(e.target.value)} 
-              placeholder="Password" 
+              placeholder="Enter your password" 
+              autoComplete="new-password"
               required 
             />
           </div>
