@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { api } from '../services/api';
-import { Lock, User, AlertCircle } from 'lucide-react';
+import { Lock } from 'lucide-react';
 
 export default function AdminLogin({ onLoginSuccess }) {
   const [username, setUsername] = useState('admin');
@@ -29,21 +29,20 @@ export default function AdminLogin({ onLoginSuccess }) {
 
   return (
     <div className="container" style={{ maxWidth: 420, padding: '60px 16px' }}>
-      <div style={{ background: 'var(--bg-surface)', border: '1px solid var(--border-color)', borderRadius: 16, padding: '28px 24px', boxShadow: '0 8px 32px rgba(0,0,0,0.4)' }}>
+      <div style={{ background: '#ffffff', border: '1px solid var(--border-color)', borderRadius: 18, padding: '32px 26px', boxShadow: '0 10px 25px -5px rgba(0,0,0,0.08)' }}>
         <div style={{ textAlign: 'center', marginBottom: 24 }}>
-          <div style={{ width: 52, height: 52, borderRadius: 12, background: 'linear-gradient(135deg, #10b981 0%, #064e3b 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 12px', boxShadow: '0 4px 16px rgba(16,185,129,0.3)' }}>
-            <Lock size={24} color="#fff" />
+          <div style={{ width: 56, height: 56, borderRadius: 14, background: 'linear-gradient(135deg, #059669 0%, #047857 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 14px', boxShadow: '0 4px 14px rgba(5, 150, 105, 0.25)' }}>
+            <Lock size={26} color="#fff" />
           </div>
-          <h2 style={{ fontSize: 20, fontWeight: 900, color: '#fff' }}>Official Admin Login</h2>
-          <p style={{ fontSize: 13, color: '#94a3b8', marginTop: 4 }}>
+          <h2 style={{ fontSize: 22, fontWeight: 900, color: '#0f172a' }}>Admin Sign In</h2>
+          <p style={{ fontSize: 13, color: '#64748b', marginTop: 4 }}>
             Nellaya Gramapanchayat Tournament Administration
           </p>
         </div>
 
         {error && (
-          <div style={{ background: 'rgba(239,68,68,0.15)', border: '1px solid #ef4444', color: '#fca5a5', padding: '10px 14px', borderRadius: 8, marginBottom: 16, fontSize: 13, display: 'flex', alignItems: 'center', gap: 8 }}>
-            <AlertCircle size={16} />
-            <span>{error}</span>
+          <div style={{ background: '#fef2f2', border: '1px solid #fecaca', color: '#dc2626', padding: '10px 14px', borderRadius: 10, marginBottom: 16, fontSize: 13, fontWeight: 700 }}>
+            {error}
           </div>
         )}
 
@@ -82,8 +81,8 @@ export default function AdminLogin({ onLoginSuccess }) {
           </button>
         </form>
 
-        <div style={{ marginTop: 20, textAlign: 'center', fontSize: 12, color: '#64748b' }}>
-          Default credential: <code>admin</code> / <code>admin123</code>
+        <div style={{ marginTop: 22, textAlign: 'center', fontSize: 12, color: '#64748b' }}>
+          Default access: <code>admin</code> / <code>admin123</code>
         </div>
       </div>
     </div>

@@ -1,14 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { 
   Home, 
   Calendar, 
   GitBranch, 
   Award, 
   Shield, 
-  Settings, 
   Lock, 
   LogOut, 
-  Eye,
   Trophy
 } from 'lucide-react';
 
@@ -19,23 +17,14 @@ import PoolsPage from './pages/PoolsPage';
 import BracketPage from './pages/BracketPage';
 import ScorersPage from './pages/ScorersPage';
 import MatchDetailPage from './pages/MatchDetailPage';
-import ComingSoon from './pages/ComingSoon';
 
 // Admin
 import AdminLogin from './admin/AdminLogin';
 import AdminDashboard from './admin/AdminDashboard';
 import AdminScoreManager from './admin/AdminScoreManager';
 import AdminTeamsManager from './admin/AdminTeamsManager';
-import AdminFixtureImport from './admin/AdminFixtureImport';
 
 export default function App() {
-  // Inauguration Mode: When true, shows exclusively the coming soon inauguration showcase
-  // Admin can toggle this anytime in Admin Dashboard or view the tournament preview
-  const [isInaugurationMode, setIsInaugurationMode] = useState(() => {
-    const saved = localStorage.getItem('inauguration_mode');
-    return saved !== null ? saved === 'true' : true; // Default: true for inauguration mode
-  });
-
   const [currentPage, setCurrentPage] = useState('home'); 
   const [currentPoolTab, setCurrentPoolTab] = useState('A');
   const [selectedMatchId, setSelectedMatchId] = useState(null);
@@ -46,19 +35,6 @@ export default function App() {
   const [adminToken, setAdminToken] = useState(localStorage.getItem('admin_token') || null);
   const [adminUser, setAdminUser] = useState(JSON.parse(localStorage.getItem('admin_user') || 'null'));
   const [adminSubPage, setAdminSubPage] = useState('dashboard');
-
-  useEffect(() => {
-    if (isInaugurationMode && !currentPage.startsWith('admin')) {
-      document.body.classList.add('inauguration-mode');
-    } else {
-      document.body.classList.remove('inauguration-mode');
-    }
-  }, [isInaugurationMode, currentPage]);
-
-  const toggleInaugurationMode = (enabled) => {
-    setIsInaugurationMode(enabled);
-    localStorage.setItem('inauguration_mode', enabled ? 'true' : 'false');
-  };
 
   const handleLoginSuccess = (token, admin) => {
     setAdminToken(token);
@@ -91,15 +67,6 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // 1. INAUGURATION MODE (PUBLIC VIEW):
-  // Show ONLY coming soon inauguration poster, Keralolsavam 2026 loading bar, and hide all other public pages.
-  if (isInaugurationMode && !currentPage.startsWith('admin')) {
-    return (
-      <ComingSoon onAdminClick={() => setCurrentPage('admin')} />
-    );
-  }
-
-  // 2. LIVE TOURNAMENT & ADMIN MODE:
   return (
     <div>
       {/* Top Header */}
@@ -124,22 +91,15 @@ export default function App() {
             <a href="#scorers" className={currentPage === 'scorers' ? 'active' : ''} onClick={(e) => { e.preventDefault(); handleNavigate('scorers'); }}>Scorers</a>
           </nav>
 
-          {/* Admin Pill / Action */}
+          {/* Header Action */}
           <div className="header-actions">
             {currentPage.startsWith('admin') ? (
               adminToken ? (
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <button 
-                    onClick={() => toggleInaugurationMode(!isInaugurationMode)} 
-                    className="admin-pill-btn"
-                    style={{ color: isInaugurationMode ? '#fbbf24' : '#10b981', borderColor: isInaugurationMode ? '#f59e0b' : '#10b981' }}
-                  >
-                    {isInaugurationMode ? '● Inauguration Mode (Active)' : '○ Public Tournament Live'}
-                  </button>
                   <button onClick={() => setCurrentPage('home')} className="admin-pill-btn">
                     Public View
                   </button>
-                  <button onClick={handleLogout} className="admin-pill-btn" style={{ color: '#ef4444' }}>
+                  <button onClick={handleLogout} className="admin-pill-btn" style={{ color: '#dc2626' }}>
                     <LogOut size={14} /> Logout
                   </button>
                 </div>
@@ -150,7 +110,7 @@ export default function App() {
               )
             ) : (
               <button onClick={() => setCurrentPage('admin')} className="admin-pill-btn">
-                <Lock size={13} color="#10b981" />
+                <Lock size={13} color="#059669" />
                 <span>Admin</span>
               </button>
             )}
@@ -191,65 +151,22 @@ export default function App() {
         {currentPage === 'admin' && (
           adminToken ? (
             <div className="container">
-              {/* Inauguration Mode Quick Toggle Banner in Admin */}
-              <div style={{ 
-                background: isInaugurationMode ? 'rgba(245, 158, 11, 0.12)' : 'rgba(16, 185, 129, 0.12)', 
-                border: `1px solid ${isInaugurationMode ? 'rgba(245, 158, 11, 0.35)' : 'rgba(16, 185, 129, 0.35)'}`,
-                borderRadius: 12, 
-                padding: '12px 16px', 
-                marginBottom: 16,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                flexWrap: 'wrap',
-                gap: 10
-              }}>
-                <div>
-                  <strong style={{ color: isInaugurationMode ? '#fbbf24' : '#34d399', fontSize: 14 }}>
-                    {isInaugurationMode ? '★ INAUGURATION MODE IS CURRENTLY ACTIVE' : '✓ PUBLIC TOURNAMENT WEBSITE IS CURRENTLY LIVE'}
-                  </strong>
-                  <div style={{ fontSize: 12, color: '#cbd5e1', marginTop: 2 }}>
-                    {isInaugurationMode 
-                      ? 'Visitors see the inauguration poster with Keralolsavam 2026 loading bar. All fixtures & pools are hidden from public.'
-                      : 'All public visitors can see full live fixtures, pool A & B rosters, scores, and knockout bracket.'}
-                  </div>
-                </div>
-
-                <button 
-                  onClick={() => toggleInaugurationMode(!isInaugurationMode)}
-                  className="btn"
-                  style={{ 
-                    background: isInaugurationMode ? '#10b981' : '#f59e0b', 
-                    color: '#070d1e', 
-                    padding: '8px 16px', 
-                    fontSize: 13,
-                    fontWeight: 800 
-                  }}
-                >
-                  {isInaugurationMode ? 'Publish Tournament Live ➔' : 'Revert to Inauguration Poster ➔'}
-                </button>
-              </div>
-
-              {/* Admin Internal Nav Tabs */}
+              {/* Admin Nav Tabs */}
               <div className="tabs-nav" style={{ marginBottom: 20 }}>
                 <button className={`tab-btn ${adminSubPage === 'dashboard' ? 'active' : ''}`} onClick={() => setAdminSubPage('dashboard')}>
                   Dashboard
                 </button>
                 <button className={`tab-btn ${adminSubPage === 'scores' ? 'active' : ''}`} onClick={() => setAdminSubPage('scores')}>
-                  Scores & Live
+                  Scores & Status
                 </button>
                 <button className={`tab-btn ${adminSubPage === 'teams' ? 'active' : ''}`} onClick={() => setAdminSubPage('teams')}>
-                  Teams (54)
-                </button>
-                <button className={`tab-btn ${adminSubPage === 'import' ? 'active' : ''}`} onClick={() => setAdminSubPage('import')}>
-                  PDF Fixture Import
+                  Teams & Byes (54)
                 </button>
               </div>
 
               {adminSubPage === 'dashboard' && <AdminDashboard token={adminToken} onNavigateSub={setAdminSubPage} />}
               {adminSubPage === 'scores' && <AdminScoreManager token={adminToken} />}
               {adminSubPage === 'teams' && <AdminTeamsManager token={adminToken} />}
-              {adminSubPage === 'import' && <AdminFixtureImport token={adminToken} />}
             </div>
           ) : (
             <AdminLogin onLoginSuccess={handleLoginSuccess} />

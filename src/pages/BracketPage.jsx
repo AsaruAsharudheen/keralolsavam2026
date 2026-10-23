@@ -2,15 +2,14 @@ import React, { useState } from 'react';
 import { api } from '../services/api';
 import { useAutoPolling } from '../hooks/useAutoPolling';
 import MatchCard from '../components/MatchCard';
-import { GitBranch, Trophy, ArrowRight, Shield } from 'lucide-react';
+import { GitBranch, Trophy } from 'lucide-react';
 
 export default function BracketPage({ onSelectMatch }) {
-  const [activeTab, setActiveTab] = useState('ALL'); // 'ALL', 'A', 'B'
-  const { data, loading } = useAutoPolling(api.getMatches, 10000);
+  const [activeTab, setActiveTab] = useState('ALL');
+  const { data } = useAutoPolling(api.getMatches, 10000);
 
   const matches = data?.matches || [];
 
-  // Group matches by round
   const rounds = [
     { key: 'R1', name: 'Round 1 · Preliminary', matches: matches.filter(m => m.round_name === 'Round 1 · Preliminary') },
     { key: 'R2', name: 'Round 2', matches: matches.filter(m => m.round_name === 'Round 2') },
@@ -25,9 +24,9 @@ export default function BracketPage({ onSelectMatch }) {
   return (
     <div className="container">
       <div style={{ margin: '16px 0 12px' }}>
-        <h1 style={{ fontSize: 22, fontWeight: 900, color: '#fff' }}>Official Knockout Bracket</h1>
-        <p style={{ fontSize: 13, color: '#94a3b8' }}>
-          Real-time progression tracking from Preliminary matches to Grand Final M53
+        <h1 style={{ fontSize: 24, fontWeight: 900, color: '#0f172a' }}>Knockout Tournament Bracket</h1>
+        <p style={{ fontSize: 13, color: '#64748b' }}>
+          Round-by-round progression tree from Preliminary fixtures through Grand Final M53
         </p>
       </div>
 
@@ -47,18 +46,18 @@ export default function BracketPage({ onSelectMatch }) {
       {/* Grand Final Pinnacle Card */}
       {grandFinalMatch && (
         <div style={{ 
-          background: 'radial-gradient(ellipse at top, rgba(245, 158, 11, 0.25) 0%, rgba(15, 28, 63, 0.95) 100%)',
-          border: '2px solid rgba(245, 158, 11, 0.6)',
-          borderRadius: 16,
-          padding: 16,
+          background: 'linear-gradient(135deg, #fffbeb 0%, #ffffff 100%)',
+          border: '2px solid #f59e0b',
+          borderRadius: 18,
+          padding: 18,
           marginBottom: 24,
-          boxShadow: '0 8px 24px rgba(245, 158, 11, 0.15)'
+          boxShadow: 'var(--card-shadow)'
         }}>
           <div style={{ textAlign: 'center', marginBottom: 12 }}>
-            <div className="badge" style={{ background: '#f59e0b', color: '#000', fontWeight: 900 }}>
+            <div className="badge" style={{ background: '#f59e0b', color: '#ffffff', fontWeight: 900 }}>
               <Trophy size={14} /> GRAND FINAL · MATCH 53
             </div>
-            <div style={{ fontSize: 13, color: '#fbbf24', marginTop: 4 }}>
+            <div style={{ fontSize: 13, color: '#b45309', marginTop: 4, fontWeight: 700 }}>
               Pool A Champion (Winner M51) vs Pool B Champion (Winner M52)
             </div>
           </div>
@@ -66,7 +65,7 @@ export default function BracketPage({ onSelectMatch }) {
         </div>
       )}
 
-      {/* Responsive Round-by-Round Progression */}
+      {/* Round by Round */}
       {rounds.map(r => {
         let roundMatches = r.matches;
         if (activeTab === 'A') {
@@ -79,11 +78,11 @@ export default function BracketPage({ onSelectMatch }) {
 
         return (
           <div key={r.key} style={{ marginBottom: 28 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12, borderBottom: '1px solid var(--border-color)', paddingBottom: 6 }}>
-              <GitBranch size={16} color="#10b981" />
-              <h2 style={{ fontSize: 17, fontWeight: 800, color: '#fff' }}>{r.name}</h2>
-              <span className="badge" style={{ background: 'var(--bg-surface)', color: '#94a3b8' }}>
-                {roundMatches.length} Matches
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12, borderBottom: '2px solid #e2e8f0', paddingBottom: 6 }}>
+              <GitBranch size={17} color="#059669" />
+              <h2 style={{ fontSize: 18, fontWeight: 900, color: '#0f172a' }}>{r.name}</h2>
+              <span className="badge badge-pending">
+                {roundMatches.length} Fixtures
               </span>
             </div>
 

@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { api } from '../services/api';
 import { useAutoPolling } from '../hooks/useAutoPolling';
-import { Award, Trophy, Search, Shield, Filter } from 'lucide-react';
+import { Trophy, Search } from 'lucide-react';
 
 export default function ScorersPage() {
   const [search, setSearch] = useState('');
   const [filterPool, setFilterPool] = useState('ALL');
-  const { data, loading, refetch } = useAutoPolling(api.getTopScorers, 10000);
+  const { data } = useAutoPolling(api.getTopScorers, 10000);
 
   const scorers = data?.scorers || [];
 
@@ -20,61 +20,61 @@ export default function ScorersPage() {
   return (
     <div className="container">
       <div style={{ margin: '16px 0 12px' }}>
-        <h1 style={{ fontSize: 22, fontWeight: 900, color: '#fff' }}>Golden Boot Rankings</h1>
-        <p style={{ fontSize: 13, color: '#94a3b8' }}>
-          Official tournament top goal scorers updated automatically from confirmed match goal events
+        <h1 style={{ fontSize: 24, fontWeight: 900, color: '#0f172a' }}>Top Goal Scorers Leaderboard</h1>
+        <p style={{ fontSize: 13, color: '#64748b' }}>
+          Official tournament golden boot standings updated automatically from recorded match goals
         </p>
       </div>
 
-      {/* Top 3 Podium Cards */}
+      {/* Podium Cards */}
       {scorers.length >= 3 && !search && filterPool === 'ALL' && (
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.15fr 1fr', gap: 8, margin: '20px 0 24px', alignItems: 'flex-end' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.15fr 1fr', gap: 10, margin: '20px 0 24px', alignItems: 'flex-end' }}>
           {/* 2nd place */}
-          <div style={{ background: 'var(--bg-surface)', border: '1px solid var(--border-color)', borderRadius: 12, padding: '12px 8px', textAlign: 'center' }}>
-            <div style={{ width: 32, height: 32, borderRadius: '50%', background: '#94a3b8', color: '#000', fontWeight: 900, margin: '0 auto 6px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div style={{ background: '#ffffff', border: '1px solid #cbd5e1', borderRadius: 14, padding: '14px 10px', textAlign: 'center', boxShadow: 'var(--card-shadow)' }}>
+            <div style={{ width: 34, height: 34, borderRadius: '50%', background: '#94a3b8', color: '#ffffff', fontWeight: 900, margin: '0 auto 6px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               2
             </div>
-            <div style={{ fontSize: 13, fontWeight: 800, color: '#fff', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+            <div style={{ fontSize: 14, fontWeight: 900, color: '#0f172a', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
               {scorers[1].player_name}
             </div>
-            <div style={{ fontSize: 10, color: '#94a3b8' }}>{scorers[1].team_name}</div>
-            <div style={{ fontSize: 18, fontWeight: 900, color: '#10b981', marginTop: 4 }}>
-              {scorers[1].total_goals} <span style={{ fontSize: 10, color: '#94a3b8' }}>G</span>
+            <div style={{ fontSize: 11, color: '#64748b' }}>{scorers[1].team_name}</div>
+            <div style={{ fontSize: 20, fontWeight: 900, color: '#059669', marginTop: 4 }}>
+              {scorers[1].total_goals} <span style={{ fontSize: 11, color: '#64748b' }}>G</span>
             </div>
           </div>
 
           {/* 1st place */}
-          <div style={{ background: 'linear-gradient(180deg, rgba(245, 158, 11, 0.2) 0%, rgba(15, 28, 63, 0.9) 100%)', border: '2px solid #f59e0b', borderRadius: 14, padding: '16px 8px', textAlign: 'center' }}>
-            <div style={{ width: 38, height: 38, borderRadius: '50%', background: '#f59e0b', color: '#000', fontWeight: 900, margin: '0 auto 6px', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 0 16px rgba(245, 158, 11, 0.4)' }}>
-              <Trophy size={18} />
+          <div style={{ background: 'linear-gradient(135deg, #fffbeb 0%, #ffffff 100%)', border: '2px solid #f59e0b', borderRadius: 16, padding: '18px 10px', textAlign: 'center', boxShadow: 'var(--card-shadow)' }}>
+            <div style={{ width: 42, height: 42, borderRadius: '50%', background: '#f59e0b', color: '#ffffff', fontWeight: 900, margin: '0 auto 8px', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 12px rgba(245, 158, 11, 0.3)' }}>
+              <Trophy size={20} />
             </div>
-            <div style={{ fontSize: 14, fontWeight: 900, color: '#fff', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+            <div style={{ fontSize: 15, fontWeight: 900, color: '#0f172a', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
               {scorers[0].player_name}
             </div>
-            <div style={{ fontSize: 11, color: '#fbbf24' }}>{scorers[0].team_name}</div>
-            <div style={{ fontSize: 22, fontWeight: 900, color: '#10b981', marginTop: 6 }}>
-              {scorers[0].total_goals} <span style={{ fontSize: 11, color: '#94a3b8' }}>goals</span>
+            <div style={{ fontSize: 12, color: '#b45309', fontWeight: 700 }}>{scorers[0].team_name}</div>
+            <div style={{ fontSize: 24, fontWeight: 900, color: '#059669', marginTop: 6 }}>
+              {scorers[0].total_goals} <span style={{ fontSize: 12, color: '#64748b' }}>goals</span>
             </div>
           </div>
 
           {/* 3rd place */}
-          <div style={{ background: 'var(--bg-surface)', border: '1px solid var(--border-color)', borderRadius: 12, padding: '12px 8px', textAlign: 'center' }}>
-            <div style={{ width: 32, height: 32, borderRadius: '50%', background: '#b45309', color: '#fff', fontWeight: 900, margin: '0 auto 6px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div style={{ background: '#ffffff', border: '1px solid #cbd5e1', borderRadius: 14, padding: '14px 10px', textAlign: 'center', boxShadow: 'var(--card-shadow)' }}>
+            <div style={{ width: 34, height: 34, borderRadius: '50%', background: '#b45309', color: '#ffffff', fontWeight: 900, margin: '0 auto 6px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               3
             </div>
-            <div style={{ fontSize: 13, fontWeight: 800, color: '#fff', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+            <div style={{ fontSize: 14, fontWeight: 900, color: '#0f172a', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
               {scorers[2].player_name}
             </div>
-            <div style={{ fontSize: 10, color: '#94a3b8' }}>{scorers[2].team_name}</div>
-            <div style={{ fontSize: 18, fontWeight: 900, color: '#10b981', marginTop: 4 }}>
-              {scorers[2].total_goals} <span style={{ fontSize: 10, color: '#94a3b8' }}>G</span>
+            <div style={{ fontSize: 11, color: '#64748b' }}>{scorers[2].team_name}</div>
+            <div style={{ fontSize: 20, fontWeight: 900, color: '#059669', marginTop: 4 }}>
+              {scorers[2].total_goals} <span style={{ fontSize: 11, color: '#64748b' }}>G</span>
             </div>
           </div>
         </div>
       )}
 
       {/* Filters and Search */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: 8, marginBottom: 16 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: 10, marginBottom: 16 }}>
         <div style={{ position: 'relative' }}>
           <input 
             type="text" 
@@ -82,16 +82,16 @@ export default function ScorersPage() {
             placeholder="Search player or team..." 
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            style={{ paddingLeft: 36, fontSize: 13 }}
+            style={{ paddingLeft: 40, fontSize: 14 }}
           />
-          <Search size={16} color="#64748b" style={{ position: 'absolute', left: 12, top: 12 }} />
+          <Search size={16} color="#94a3b8" style={{ position: 'absolute', left: 14, top: 13 }} />
         </div>
 
         <select 
           className="form-select" 
           value={filterPool} 
           onChange={(e) => setFilterPool(e.target.value)}
-          style={{ width: 120, fontSize: 13 }}
+          style={{ width: 130, fontSize: 13 }}
         >
           <option value="ALL">All Pools</option>
           <option value="A">Pool A</option>
@@ -100,9 +100,9 @@ export default function ScorersPage() {
       </div>
 
       {/* Scorers Table */}
-      <div style={{ background: 'var(--bg-surface)', border: '1px solid var(--border-color)', borderRadius: 14, overflow: 'hidden' }}>
+      <div style={{ background: '#ffffff', border: '1px solid var(--border-color)', borderRadius: 16, overflow: 'hidden', boxShadow: 'var(--card-shadow)' }}>
         {filtered.length === 0 ? (
-          <div style={{ textAlign: 'center', padding: '40px', color: '#94a3b8' }}>
+          <div style={{ textAlign: 'center', padding: '40px', color: '#64748b' }}>
             No goals recorded yet. Scorer stats update automatically as match events are recorded.
           </div>
         ) : (
@@ -113,40 +113,40 @@ export default function ScorersPage() {
                 display: 'flex', 
                 alignItems: 'center', 
                 justifyContent: 'space-between', 
-                padding: '12px 16px',
-                borderBottom: idx < filtered.length - 1 ? '1px solid rgba(255,255,255,0.06)' : 'none',
-                background: idx === 0 ? 'rgba(245, 158, 11, 0.05)' : 'transparent'
+                padding: '14px 18px',
+                borderBottom: idx < filtered.length - 1 ? '1px solid #f1f5f9' : 'none',
+                background: idx === 0 ? '#fffbeb' : '#ffffff'
               }}
             >
-              <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
                 <div style={{ 
-                  width: 28, 
-                  height: 28, 
+                  width: 30, 
+                  height: 30, 
                   borderRadius: 8, 
-                  background: s.rank === 1 ? '#f59e0b' : (s.rank === 2 ? '#94a3b8' : (s.rank === 3 ? '#b45309' : '#1e293b')),
-                  color: s.rank <= 2 ? '#000' : '#fff',
+                  background: s.rank === 1 ? '#f59e0b' : (s.rank === 2 ? '#94a3b8' : (s.rank === 3 ? '#b45309' : '#f1f5f9')),
+                  color: s.rank <= 3 ? '#ffffff' : '#0f172a',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   fontWeight: 900,
-                  fontSize: 12
+                  fontSize: 13
                 }}>
                   {s.rank}
                 </div>
                 <div>
-                  <div style={{ fontWeight: 800, color: '#fff', fontSize: 14 }}>
+                  <div style={{ fontWeight: 900, color: '#0f172a', fontSize: 15 }}>
                     {s.player_name} {s.jersey_number ? `(#${s.jersey_number})` : ''}
                   </div>
-                  <div style={{ fontSize: 12, color: '#94a3b8' }}>
-                    {s.team_name} · <span style={{ color: s.pool_code === 'A' ? '#34d399' : '#60a5fa' }}>Pool {s.pool_code}</span>
+                  <div style={{ fontSize: 12, color: '#64748b', fontWeight: 600 }}>
+                    {s.team_name} · <span style={{ color: s.pool_code === 'A' ? '#047857' : '#1d4ed8' }}>Pool {s.pool_code}</span>
                   </div>
                 </div>
               </div>
 
               <div style={{ textAlign: 'right' }}>
-                <div style={{ fontSize: 18, fontWeight: 900, color: '#10b981' }}>{s.total_goals}</div>
+                <div style={{ fontSize: 20, fontWeight: 900, color: '#059669' }}>{s.total_goals}</div>
                 {s.penalty_goals > 0 && (
-                  <div style={{ fontSize: 10, color: '#94a3b8' }}>({s.penalty_goals} pen)</div>
+                  <div style={{ fontSize: 11, color: '#64748b' }}>({s.penalty_goals} pen)</div>
                 )}
               </div>
             </div>

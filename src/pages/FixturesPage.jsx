@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { api } from '../services/api';
 import { useAutoPolling } from '../hooks/useAutoPolling';
 import MatchCard from '../components/MatchCard';
-import { Filter, Search, Calendar } from 'lucide-react';
+import { Search } from 'lucide-react';
 
 export default function FixturesPage({ onSelectMatch, initialFilter = {} }) {
   const [selectedPool, setSelectedPool] = useState(initialFilter.pool || 'ALL');
@@ -10,7 +10,7 @@ export default function FixturesPage({ onSelectMatch, initialFilter = {} }) {
   const [selectedRound, setSelectedRound] = useState(initialFilter.round || 'ALL');
   const [searchQuery, setSearchQuery] = useState('');
 
-  const { data, loading, refetch } = useAutoPolling(() => {
+  const { data, loading } = useAutoPolling(() => {
     const filters = {};
     if (selectedPool !== 'ALL') filters.pool = selectedPool;
     if (selectedStatus !== 'ALL') filters.status = selectedStatus;
@@ -32,9 +32,9 @@ export default function FixturesPage({ onSelectMatch, initialFilter = {} }) {
   return (
     <div className="container">
       <div style={{ margin: '16px 0 12px' }}>
-        <h1 style={{ fontSize: 22, fontWeight: 900, color: '#fff' }}>Official Match Fixtures</h1>
-        <p style={{ fontSize: 13, color: '#94a3b8' }}>
-          Numbered M1 through M53 · Single Elimination Bracket
+        <h1 style={{ fontSize: 24, fontWeight: 900, color: '#0f172a' }}>Match Fixtures</h1>
+        <p style={{ fontSize: 13, color: '#64748b' }}>
+          Numbered M1 through M53 · Filter by Pool, Status (Pending, Running, Completed) & Round
         </p>
       </div>
 
@@ -52,24 +52,24 @@ export default function FixturesPage({ onSelectMatch, initialFilter = {} }) {
       </div>
 
       {/* Filter and Search Row */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginBottom: 12 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 12 }}>
         <select 
           className="form-select" 
           value={selectedStatus} 
           onChange={(e) => setSelectedStatus(e.target.value)}
-          style={{ fontSize: 13, padding: '8px 10px' }}
+          style={{ fontSize: 13, padding: '9px 12px' }}
         >
           <option value="ALL">All Statuses</option>
-          <option value="Upcoming">Upcoming</option>
-          <option value="Live">Live / HT</option>
-          <option value="Full-time">Completed (FT)</option>
+          <option value="Pending">Pending</option>
+          <option value="Running">Running</option>
+          <option value="Completed">Completed</option>
         </select>
 
         <select 
           className="form-select" 
           value={selectedRound} 
           onChange={(e) => setSelectedRound(e.target.value)}
-          style={{ fontSize: 13, padding: '8px 10px' }}
+          style={{ fontSize: 13, padding: '9px 12px' }}
         >
           <option value="ALL">All Rounds</option>
           <option value="Round 1 · Preliminary">Round 1 (Preliminary)</option>
@@ -86,20 +86,20 @@ export default function FixturesPage({ onSelectMatch, initialFilter = {} }) {
         <input 
           type="text" 
           className="form-input" 
-          placeholder="Search team or match (e.g. M1, M51, Moscow, Gally Boys)..." 
+          placeholder="Search team or match number (e.g. M1, M51, Moscow, Gally Boys)..." 
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          style={{ paddingLeft: 36, fontSize: 14 }}
+          style={{ paddingLeft: 40, fontSize: 14 }}
         />
-        <Search size={16} color="#64748b" style={{ position: 'absolute', left: 12, top: 12 }} />
+        <Search size={16} color="#94a3b8" style={{ position: 'absolute', left: 14, top: 13 }} />
       </div>
 
       {/* Match Cards List */}
       <div>
         {loading && matches.length === 0 ? (
-          <div style={{ textAlign: 'center', padding: '40px', color: '#94a3b8' }}>Loading fixtures...</div>
+          <div style={{ textAlign: 'center', padding: '40px', color: '#64748b' }}>Loading fixtures...</div>
         ) : filteredMatches.length === 0 ? (
-          <div style={{ textAlign: 'center', padding: '40px', background: 'var(--bg-surface)', borderRadius: 12, color: '#94a3b8' }}>
+          <div style={{ textAlign: 'center', padding: '40px', background: '#ffffff', border: '1px solid var(--border-color)', borderRadius: 14, color: '#64748b' }}>
             No matches found matching current filters.
           </div>
         ) : (
