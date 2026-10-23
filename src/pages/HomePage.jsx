@@ -41,6 +41,26 @@ export default function HomePage({ onSelectMatch, onNavigate }) {
           Gramapanchayat Football Tournament · 54 Teams · Two Pools · 53 Knockout Fixtures
         </p>
 
+        {/* Official Tournament Poster Showcase */}
+        <div className="tournament-poster-card">
+          <div className="tournament-poster-wrap">
+            <img 
+              src="/ads.jpeg" 
+              alt="Nellaya Gramapanchayat Keralolsavam 2026 Football Tournament Poster" 
+              className="tournament-poster-img"
+              loading="eager"
+            />
+          </div>
+          <div className="tournament-poster-caption">
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, color: '#059669', fontWeight: 900, fontSize: 13, textTransform: 'uppercase', letterSpacing: 0.5 }}>
+              <Trophy size={16} /> Official Tournament Fixture Schedule
+            </div>
+            <div style={{ fontSize: 12, color: '#64748b', marginTop: 2 }}>
+              Marayamangalam School Turf · 24, 25, 26 Dates
+            </div>
+          </div>
+        </div>
+
         {stats?.champion && (
           <div style={{ margin: '14px auto', maxWidth: 450, padding: 14, background: '#fffbeb', border: '2px solid #f59e0b', borderRadius: 14 }}>
             <div style={{ color: '#b45309', fontWeight: 900, fontSize: 13, textTransform: 'uppercase', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
