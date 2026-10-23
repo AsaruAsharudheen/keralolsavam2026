@@ -1,5 +1,9 @@
-// API base URL configuration
-const API_BASE = '/api';
+// API base URL configuration:
+// Automatically detects production (Vercel) to connect to live Hostinger backend on brandfolks.in
+// In local dev, falls back to Vite proxy /api (or local PHP server)
+const API_BASE = (typeof window !== 'undefined' && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1')
+  ? 'https://brandfolks.in/KeralolBackend/api'
+  : '/api';
 
 export const api = {
   // Stats & Overview
