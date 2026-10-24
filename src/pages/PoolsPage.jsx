@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { api } from '../services/api';
 import { useAutoPolling } from '../hooks/useAutoPolling';
 import MatchCard from '../components/MatchCard';
-import { Shield, Award, Users, ChevronRight, GitBranch } from 'lucide-react';
+import { Shield, Award, Users, ChevronRight, GitBranch, Clock } from 'lucide-react';
+import { formatMatchTime } from '../utils/dateFormatter';
 
 export default function PoolsPage({ defaultPool = 'A', onSelectMatch }) {
   const [activePool, setActivePool] = useState(defaultPool);
@@ -128,8 +129,15 @@ export default function PoolsPage({ defaultPool = 'A', onSelectMatch }) {
                 onClick={() => onSelectMatch && onSelectMatch(m)} 
                 style={{ cursor: 'pointer' }}
               >
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, color: '#64748b', fontWeight: 800, marginBottom: 4 }}>
-                  <span>M{m.match_number}</span>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: 11, color: '#64748b', fontWeight: 800, marginBottom: 4 }}>
+                  <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                    M{m.match_number}
+                    {m.match_time && (
+                      <span style={{ fontSize: 10, color: '#0284c7', background: '#f0f9ff', padding: '1px 5px', borderRadius: 4, fontWeight: 700 }}>
+                        {formatMatchTime(m.match_time)}
+                      </span>
+                    )}
+                  </span>
                   <span className={`badge badge-${m.status.toLowerCase()}`}>{m.status}</span>
                 </div>
                 <div className={`tree-team-row ${m.winner_team_id == m.home_team_id ? 'winner' : ''}`}>
@@ -163,8 +171,15 @@ export default function PoolsPage({ defaultPool = 'A', onSelectMatch }) {
                 onClick={() => onSelectMatch && onSelectMatch(m)} 
                 style={{ cursor: 'pointer' }}
               >
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, color: '#64748b', fontWeight: 800, marginBottom: 4 }}>
-                  <span>M{m.match_number}</span>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: 11, color: '#64748b', fontWeight: 800, marginBottom: 4 }}>
+                  <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                    M{m.match_number}
+                    {m.match_time && (
+                      <span style={{ fontSize: 10, color: '#0284c7', background: '#f0f9ff', padding: '1px 5px', borderRadius: 4, fontWeight: 700 }}>
+                        {formatMatchTime(m.match_time)}
+                      </span>
+                    )}
+                  </span>
                   <span className={`badge badge-${m.status.toLowerCase()}`}>{m.status}</span>
                 </div>
                 <div className={`tree-team-row ${m.winner_team_id == m.home_team_id ? 'winner' : ''}`}>
@@ -199,8 +214,15 @@ export default function PoolsPage({ defaultPool = 'A', onSelectMatch }) {
                 onClick={() => onSelectMatch && onSelectMatch(m)} 
                 style={{ cursor: 'pointer' }}
               >
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, color: '#64748b', fontWeight: 800, marginBottom: 4 }}>
-                  <span>M{m.match_number}</span>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: 11, color: '#64748b', fontWeight: 800, marginBottom: 4 }}>
+                  <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                    M{m.match_number}
+                    {m.match_time && (
+                      <span style={{ fontSize: 10, color: '#0284c7', background: '#f0f9ff', padding: '1px 5px', borderRadius: 4, fontWeight: 700 }}>
+                        {formatMatchTime(m.match_time)}
+                      </span>
+                    )}
+                  </span>
                   <span className={`badge badge-${m.status.toLowerCase()}`}>{m.status}</span>
                 </div>
                 <div className={`tree-team-row ${m.winner_team_id == m.home_team_id ? 'winner' : ''}`}>
@@ -234,8 +256,15 @@ export default function PoolsPage({ defaultPool = 'A', onSelectMatch }) {
                 onClick={() => onSelectMatch && onSelectMatch(m)} 
                 style={{ cursor: 'pointer' }}
               >
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, color: '#64748b', fontWeight: 800, marginBottom: 4 }}>
-                  <span>M{m.match_number}</span>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: 11, color: '#64748b', fontWeight: 800, marginBottom: 4 }}>
+                  <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                    M{m.match_number}
+                    {m.match_time && (
+                      <span style={{ fontSize: 10, color: '#0284c7', background: '#f0f9ff', padding: '1px 5px', borderRadius: 4, fontWeight: 700 }}>
+                        {formatMatchTime(m.match_time)}
+                      </span>
+                    )}
+                  </span>
                   <span className={`badge badge-${m.status.toLowerCase()}`}>{m.status}</span>
                 </div>
                 <div className={`tree-team-row ${m.winner_team_id == m.home_team_id ? 'winner' : ''}`}>
@@ -268,8 +297,15 @@ export default function PoolsPage({ defaultPool = 'A', onSelectMatch }) {
                 onClick={() => onSelectMatch && onSelectMatch(sfMatch)} 
                 style={{ cursor: 'pointer', border: '2px solid #3b82f6', background: '#eff6ff' }}
               >
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, color: '#1d4ed8', fontWeight: 900, marginBottom: 4 }}>
-                  <span>MATCH {sfMatch.match_number}</span>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: 11, color: '#1d4ed8', fontWeight: 900, marginBottom: 4 }}>
+                  <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                    MATCH {sfMatch.match_number}
+                    {sfMatch.match_time && (
+                      <span style={{ fontSize: 10, color: '#1d4ed8', background: '#dbeafe', padding: '1px 5px', borderRadius: 4, fontWeight: 700 }}>
+                        {formatMatchTime(sfMatch.match_time)}
+                      </span>
+                    )}
+                  </span>
                   <span className={`badge badge-${sfMatch.status.toLowerCase()}`}>{sfMatch.status}</span>
                 </div>
                 <div className={`tree-team-row ${sfMatch.winner_team_id == sfMatch.home_team_id ? 'winner' : ''}`}>

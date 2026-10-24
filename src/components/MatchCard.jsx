@@ -1,5 +1,6 @@
 import React from 'react';
-import { Shield, Clock, MapPin, ChevronRight, Trophy } from 'lucide-react';
+import { Shield, Clock, Calendar, MapPin, ChevronRight, Trophy } from 'lucide-react';
+import { formatMatchDate, formatMatchTime } from '../utils/dateFormatter';
 
 export default function MatchCard({ match, onClick }) {
   const isHalftime = match.status === 'Half-time' || match.status === 'Halftime';
@@ -10,6 +11,9 @@ export default function MatchCard({ match, onClick }) {
 
   const homeWon = isCompleted && match.winner_team_id && String(match.winner_team_id) === String(match.home_team_id);
   const awayWon = isCompleted && match.winner_team_id && String(match.winner_team_id) === String(match.away_team_id);
+
+  const formattedDate = formatMatchDate(match.match_date);
+  const formattedTime = formatMatchTime(match.match_time);
 
   // Label helpers for knockout source (Team 1 and Team 2)
   const getTeam1Label = () => {
@@ -44,6 +48,19 @@ export default function MatchCard({ match, onClick }) {
           {match.pool_code && (
             <span className={`badge badge-pool-${match.pool_code.toLowerCase()}`}>
               Pool {match.pool_code}
+            </span>
+          )}
+          {(formattedDate || formattedTime) && (
+            <span className="knockout-schedule-pill">
+              <Calendar size={11} color="#059669" />
+              <span>{formattedDate}</span>
+              {formattedTime && (
+                <>
+                  <span style={{ opacity: 0.4 }}>•</span>
+                  <Clock size={11} color="#2563eb" />
+                  <span>{formattedTime}</span>
+                </>
+              )}
             </span>
           )}
         </div>

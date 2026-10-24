@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { api } from '../services/api';
-import { Shield, ArrowLeft, Award, MapPin, Clock } from 'lucide-react';
+import { Shield, ArrowLeft, Award, MapPin, Clock, Calendar } from 'lucide-react';
+import { formatMatchDate, formatMatchTime } from '../utils/dateFormatter';
 
 export default function MatchDetailPage({ matchId, matchNumber, onBack }) {
   const [match, setMatch] = useState(null);
@@ -157,6 +158,23 @@ export default function MatchDetailPage({ matchId, matchNumber, onBack }) {
             <MapPin size={15} color="#059669" />
             <span>{match.venue || 'Nellaya Ground'}</span>
           </div>
+          {(match.match_date || match.match_time) && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, background: '#f8fafc', padding: '4px 10px', borderRadius: 8, border: '1px solid #e2e8f0', fontWeight: 800 }}>
+              <span style={{ display: 'flex', alignItems: 'center', gap: 5, color: '#047857' }}>
+                <Calendar size={14} />
+                <span>{formatMatchDate(match.match_date)}</span>
+              </span>
+              {match.match_time && (
+                <>
+                  <span style={{ opacity: 0.3 }}>•</span>
+                  <span style={{ display: 'flex', alignItems: 'center', gap: 5, color: '#2563eb' }}>
+                    <Clock size={14} />
+                    <span>{formatMatchTime(match.match_time)}</span>
+                  </span>
+                </>
+              )}
+            </div>
+          )}
           {match.next_match_number && (
             <div style={{ color: '#d97706', fontWeight: 800 }}>
               Winner advances to M{match.next_match_number}
