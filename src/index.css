@@ -366,6 +366,26 @@ input, select, textarea {
   font-size: 12px;
 }
 
+.knockout-schedule-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  padding: 3px 8px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #334155;
+  line-height: 1;
+}
+
+.knockout-schedule-pill svg {
+  display: inline-block;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+
 .knockout-pairing-box {
   display: flex;
   flex-direction: column;

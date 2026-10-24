@@ -52,13 +52,17 @@ export default function MatchCard({ match, onClick }) {
           )}
           {(formattedDate || formattedTime) && (
             <span className="knockout-schedule-pill">
-              <Calendar size={11} color="#059669" />
-              <span>{formattedDate}</span>
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+                <Calendar size={12} color="#059669" />
+                <span>{formattedDate}</span>
+              </span>
               {formattedTime && (
                 <>
-                  <span style={{ opacity: 0.4 }}>•</span>
-                  <Clock size={11} color="#2563eb" />
-                  <span>{formattedTime}</span>
+                  <span style={{ color: '#94a3b8', margin: '0 1px' }}>•</span>
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+                    <Clock size={12} color="#2563eb" />
+                    <span>{formattedTime}</span>
+                  </span>
                 </>
               )}
             </span>
